@@ -1,0 +1,32 @@
+- What do we need to get started?
+    - System Dependencies
+        - `xcode-select --install` - if we’re doing Desktop only (which we are)
+    - Rust - I recommend we install the latest (1.87)
+- Cool Add Ons we can consider
+    - Deep Linking could be useful for sending links to a “mob” and it connects automatically do the app and then the session (partial support for MacOs)
+    - HTTP Client could be useful (tentative)
+    - Notifications would be crucial for the mob tool, so we can all have a synced “next”
+        - Interesting challenge could be to sync these
+    - WebSocket could be useful to keep track of the notifications? I am unsure
+- Architecture of Tauri
+    - Tooling available
+        - API - TS library that creates endpoints to import for the framework so the webview can call and listed to backend activity
+        - Bundler - Created the build for the Tauri app
+        - cli.rs - Tool for a full CLI interface
+            - Has a cli.js which is a wrapper for it
+        - tauri-plugin-fs - Could be useful for reading files and folders for mob activity
+        - stronghold.rs - Secure storage in the form of key/value
+    - TAO
+        - Cross platform app window creation lib for Rust that supports all major platforms. Fork of winit that has extensions such as menu bar and system tray
+    - WRY
+        - Cross platform webview rendering lib for Rust that supports all major desktop platforms. Tauri uses WRY as an abstraction layor responsible to determine which webview is used
+    - IPC (Inter Process Communication)
+        - Allows isolated processes to communicate securely
+        - Two patterns to pick from
+            - Brownfield - Default pattern. Simplest and most straightforward. Basically used as the most common one to allow existing web projects to quickly scaffold into an app with minimal work
+            - Isolation - Recommended by Tauri.  Intercepts all the IPC messages (*all* of them). Primarily for safety reasons. Technically has more overhead than Brownfield because of the crypto (not financial crypto) layer that encrypt and decrypts the messages. Most apps won’t see a difference.
+    - Core Process
+        - Uses multiple processes
+        - Core responsibility is to orchestrate the app window, system tray menu, notifications, and also routes IPC to intercept, filter, and manipulate IPC messages in one place
+        - Responsible for managing global state (settings/database)
+        - Uses Rust’s Ownership model to guarantee memory safety
