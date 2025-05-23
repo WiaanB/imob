@@ -14,6 +14,11 @@ edition = "2021"
 name = "imob_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+
+[mob_commands]
+name = "mob_commands"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
